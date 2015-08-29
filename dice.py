@@ -12,7 +12,7 @@ def roll_damage(num, size):
     results = 0 
     for i in range(0, num):
         r = roll(1, size)
-        while (r == 6):
+        while r == size:
             results += r
             r = roll(1, size)
         results += r
@@ -27,7 +27,7 @@ def roll_skill(num, size):
         if r == 1:
             busts += 1
         else:
-            while (r == 6):
+            while (r == size):
                 results += r
                 r = roll(1, size)
         results += r
@@ -40,7 +40,7 @@ def roll_wind(num, size):
     results = 0 
     for i in range(0, num):
         r = roll(1, size)
-        while (r == 6):
+        while (r == size):
             results += r
             r = roll(1, size)
         if r > results:
