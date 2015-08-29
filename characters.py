@@ -16,7 +16,8 @@ class Attribute:
             return result + mod
 
     def set_trait(self, name, num=0):
-        """Adds each trait to it's dictionary on character creation"""
+        """Adds each trait to it's dictionary on character creation, and the
+        concentrations that are in it's family."""
         self.__dict__[name] = Trait(self, num)
 
     def set_num(num):
@@ -25,7 +26,7 @@ class Attribute:
         self.num = num
 
     def set_size(size):
-        """Set's the sizr of die for the attribute on character creation or
+        """Set's the size of die for the attribute on character creation or
         level up."""
         self.size = size
 
@@ -36,11 +37,12 @@ class Trait:
 
     def roll(self, mod=0):
         """Roll the skill, returning 0 for a bust"""
+        if self.num == 0:
+            result = roll_skill(1, self.parent.size)
+            return result + mod - 2
         result = roll_skill(self.num, self.parent.size)
         if result == 0:
             return result
-        elif self.num == 0:
-            return result - 2
         else:
             return result + mod
 
@@ -59,11 +61,13 @@ class Concentration:
         self.parent = trait
 
     def roll(self, mod=0):
+        """Roll the skill, returning 0 for a bust, rolling with num=1 if num=0"""
+        if self.num == 0:
+            result = roll_skill(1, self.parent.size)
+            return result - 2
         result = roll_skill(self.num, self.parent.parent.size)
         if result == 0:
             return result
-        elif self.num == 0:
-            return result - 2
         else:
             return result + mod
 
@@ -89,7 +93,7 @@ class Character:
         self.knowledge.set_trait("demolition")
         self.knowledge.set_trait("disguise")
         self.knowledge.set_trait("language")
-        self.knowledge.language.set_concentration("nativetongue")
+        self.knowledge.language.set_concentration("nativetongue", 2)
         self.knowledge.set_trait("medicine")
         self.knowledge.set_trait("professional")
         self.knowledge.set_trait("science")
@@ -120,14 +124,14 @@ class Character:
         self.deftness.set_trait("speedload")
         self.deftness.set_trait("throwin")
         self.nimbleness = Attribute()
-        self.deftness.set_trait("climbin", 1)
-        self.deftness.set_trait("dodge")
-        self.deftness.set_trait("drivin")
-        self.deftness.set_trait("fightin")
-        self.deftness.set_trait("ridin")
-        self.deftness.set_trait("sneak", 1)
-        self.deftness.set_trait("swimming")
-        self.deftness.set_trait("teamster")
+        self.nimbleness.set_trait("climbin", 1)
+        self.nimbleness.set_trait("dodge")
+        self.nimbleness.set_trait("drivin")
+        self.nimbleness.set_trait("fightin")
+        self.nimbleness.set_trait("ridin")
+        self.nimbleness.set_trait("sneak", 1)
+        self.nimbleness.set_trait("swimming")
+        self.nimbleness.set_trait("teamster")
         self.strength = Attribute()
         self.quickness = Attribute()
         self.quickness.set_trait("speeddraw")
@@ -141,4 +145,4 @@ class Character:
     
 if __name__ == "__main__":
     c = Character()
-    print(c.knowledge.roll())
+    print(c.knowledge.language.roll())
