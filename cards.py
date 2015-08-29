@@ -1,5 +1,28 @@
 from random import randint, shuffle
 
+class Deck:
+    """A set of 54 cards"""
+    def __init__(self):
+        self.cards = [Card(i) for i in range(1, 55)]
+        self.shuffle()
+
+    def draw(self):
+        return self.cards.pop()
+
+    def shuffle(self):
+        return shuffle(self.cards)
+
+class Card:
+    """A card is really just a number"""
+    def __init__(self, value):
+        self.value = value
+        self.number = card_lookup_table[self.value][0]
+        self.suit = card_lookup_table[self.value][1]
+        if self.value == 1 or self.value == 54:
+            self.name = self.number + " " + self.suit
+        else:
+            self.name = self.number + " of " + self.suit
+
 card_lookup_table = {
             1: ["Black", "Joker"],
             2: ["Two", "Clubs"],
@@ -56,31 +79,3 @@ card_lookup_table = {
             53: ["Ace", "Spades"],
             54: ["Red", "Joker"]
         }
-
-class Card:
-    """A card is really just a number"""
-    def __init__(self, value):
-        self.value = value
-        self.number = card_lookup_table[self.value][0]
-        self.suit = card_lookup_table[self.value][1]
-        if self.value == 1 or self.value == 54:
-            self.name = self.number + " " + self.suit
-        else:
-            self.name = self.number + " of " + self.suit
-
-class Deck:
-    """A set of 54 cards"""
-    def __init__(self):
-        self.cards = [Card(i) for i in range(1, 55)]
-       self.shuffle()
-
-    def draw(self):
-        return self.cards.pop()
-
-    def shuffle(self):
-        return self.cards.shuffle()
-
-if __name__ == "__main__":
-    d = Deck()
-    print(d.draw())
-    print(len(d.cards))
