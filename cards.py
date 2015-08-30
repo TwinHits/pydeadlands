@@ -1,7 +1,10 @@
 from random import randint, shuffle
 
 class Deck:
-    """A set of 54 cards"""
+    """A list of 54 cards.
+            draw(): Returns 1 card, erases it from list. 
+            shuffle(): Resets the deck to 54 cards in random order.
+    """
     def __init__(self):
         self.cards = [Card(i) for i in range(1, 55)]
         self.shuffle()
@@ -10,10 +13,21 @@ class Deck:
         return self.cards.pop()
 
     def shuffle(self):
-        return shuffle(self.cards)
+        self.cards = [Card(i) for i in range(1, 55)]
+        self.shuffle()
 
 class Card:
-    """A card is really just a number"""
+    """A card is really just a number. Takes a relative value of a card and
+    looks it up on the card_lookup_table for the rest of the information.
+            card.value: Get the relative value of the card.
+            card.number: Get the number value of the card face
+            card.suit: Get the relative value of the suit of the card face.
+            card.die_num: Get the converted die num from the suit for character
+            creation.
+            card.die_size: Get the convereted die size from the number value for
+            character creation.
+            card.name: Get the name of the card face.
+            """
     def __init__(self, value):
         self.value = value
         self.number = card_lookup_table[self.value][0]
@@ -26,7 +40,7 @@ class Card:
             self.name = self.number + " of " + self.suit
 
 card_lookup_table = {
-        #number, suit, die number, die size
+        #number, suit, die number, die size for initilization of a deck
             1: ["Black", "Joker", 1, 12],
             2: ["Two", "Clubs", 1, 4],
             3: ["Two", "Diamonds", 2, 4],
