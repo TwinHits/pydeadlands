@@ -6,7 +6,6 @@ class Deck:
             shuffle(): Resets the deck to 54 cards in random order.
     """
     def __init__(self):
-        self.cards = [Card(i) for i in range(1, 55)]
         self.shuffle()
 
     def draw(self):
@@ -14,7 +13,7 @@ class Deck:
 
     def shuffle(self):
         self.cards = [Card(i) for i in range(1, 55)]
-        self.shuffle()
+        shuffle(self.cards)
 
 class Card:
     """A card is really just a number. Takes a relative value of a card and
