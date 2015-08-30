@@ -1,39 +1,39 @@
 from dice import roll_skill
-
-class Attribute:
-    """Parent stat. Contains holds the trait instances that are in it's
+from cards import Deck
+class Trait:
+    """Parent stat. Contains holds the aptitude instances that are in it's
     family."""
     def __init__(self, num=1, size=4):
         self.num = num
         self.size = size
 
     def roll(self, mod=0):
-        """Rolls the attribute"""
+        """Rolls the trait"""
         result = roll_skill(self.num, self.size)
         if result == 0:
             return result
         else:
             return result + mod
 
-    def set_trait(self, name, num=0):
-        """Adds each trait to it's dictionary on character creation, and the
+    def set_aptitude(self, name, num=0):
+        """Adds each aptitude to it's dictionary on character creation, and the
         concentrations that are in it's family."""
-        self.__dict__[name] = Trait(self, num)
+        self.__dict__[name] = Aptitude(self, num)
 
-    def set_num(num):
-        """Set's the number of die for the attribute on character creation or
+    def set_num(self, num):
+        """Set's the number of die for the trait on character creation or
         level up."""
         self.num = num
 
-    def set_size(size):
-        """Set's the size of die for the attribute on character creation or
+    def set_size(self, size):
+        """Set's the size of die for the trait on character creation or
         level up."""
         self.size = size
 
-class Trait:
-    def __init__(self, attribute, num=0):
+class Aptitude:
+    def __init__(self, trait, num=0):
         self.num = num
-        self.parent = attribute 
+        self.parent = trait 
 
     def roll(self, mod=0):
         """Roll the skill, returning 0 for a bust"""
@@ -47,18 +47,18 @@ class Trait:
             return result + mod
 
     def set_concentration(self, name, num=0):
-        """Adds each trait to it's dictionary on character creation"""
+        """Adds each aptitude to it's dictionary on character creation"""
         self.__dict__[name] = Concentration(self, num)
 
-    def set_num(num):
-        """Set's the number of die for the trait on character creation or
+    def set_num(self, num):
+        """Set's the number of die for the aptitude on character creation or
         level up."""
         self.num = num
 
 class Concentration:
-    def __init__(self, trait, num=0):
+    def __init__(self, aptitude, num=0):
         self.num = num
-        self.parent = trait
+        self.parent = aptitude
 
     def roll(self, mod=0):
         """Roll the skill, returning 0 for a bust, rolling with num=1 if num=0"""
@@ -71,78 +71,103 @@ class Concentration:
         else:
             return result + mod
 
-    def set_num(num):
-        """Set's the number of die for the trait on character creation or
+    def set_num(self, num):
+        """Set's the number of die for the aptitude on character creation or
         level up."""
         self.num = num
 
 class Character:
     def __init__(self):
         """Any deadlands character, player, npc, or monster. Generates
-        attributes and traits instances on initialization.""" 
-        self.cognition = Attribute()
-        self.cognition.set_trait("artillery")
-        self.cognition.set_trait("arts")
-        self.cognition.set_trait("scrutinize")
-        self.cognition.set_trait("search", 1)
-        self.cognition.set_trait("tracking")
-        self.knowledge = Attribute()
-        self.knowledge.set_trait("academia")
-        self.knowledge.set_trait("areaknowledge")
+        traits and aptitudes instances on initialization.""" 
+        self.cognition = Trait()
+        self.cognition.set_aptitude("artillery")
+        self.cognition.set_aptitude("arts")
+        self.cognition.set_aptitude("scrutinize")
+        self.cognition.set_aptitude("search", 1)
+        self.cognition.set_aptitude("tracking")
+        self.knowledge = Trait()
+        self.knowledge.set_aptitude("academia")
+        self.knowledge.set_aptitude("areaknowledge")
         self.knowledge.areaknowledge.set_concentration("homecountry", 2)
-        self.knowledge.set_trait("demolition")
-        self.knowledge.set_trait("disguise")
-        self.knowledge.set_trait("language")
+        self.knowledge.set_aptitude("demolition")
+        self.knowledge.set_aptitude("disguise")
+        self.knowledge.set_aptitude("language")
         self.knowledge.language.set_concentration("nativetongue", 2)
-        self.knowledge.set_trait("medicine")
-        self.knowledge.set_trait("professional")
-        self.knowledge.set_trait("science")
-        self.knowledge.set_trait("trade")
-        self.mein = Attribute()
-        self.mein.set_trait("animalhandling")
-        self.mein.set_trait("leadership")
-        self.mein.set_trait("overawe")
-        self.mein.set_trait("performin")
-        self.mein.set_trait("persuasion")
-        self.mein.set_trait("taletellin")
-        self.smarts = Attribute()
-        self.smarts.set_trait("bluff")
-        self.smarts.set_trait("gambling")
-        self.smarts.set_trait("ridicule")
-        self.smarts.set_trait("scroungin")
-        self.smarts.set_trait("survival")
-        self.smarts.set_trait("streetwise")
-        self.smarts.set_trait("tinkerin")
-        self.spirit = Attribute()
-        self.spirit.set_trait("faith")
-        self.spirit.set_trait("guts")
-        self.deftness = Attribute()
-        self.deftness.set_trait("bow")
-        self.deftness.set_trait("filchin")
-        self.deftness.set_trait("lockpickin")
-        self.deftness.set_trait("sleightohand")
-        self.deftness.set_trait("speedload")
-        self.deftness.set_trait("throwin")
-        self.nimbleness = Attribute()
-        self.nimbleness.set_trait("climbin", 1)
-        self.nimbleness.set_trait("dodge")
-        self.nimbleness.set_trait("drivin")
-        self.nimbleness.set_trait("fightin")
-        self.nimbleness.set_trait("ridin")
-        self.nimbleness.set_trait("sneak", 1)
-        self.nimbleness.set_trait("swimming")
-        self.nimbleness.set_trait("teamster")
-        self.strength = Attribute()
-        self.quickness = Attribute()
-        self.quickness.set_trait("speeddraw")
-        self.vigor = Attribute()
+        self.knowledge.set_aptitude("medicine")
+        self.knowledge.set_aptitude("professional")
+        self.knowledge.set_aptitude("science")
+        self.knowledge.set_aptitude("trade")
+        self.mein = Trait()
+        self.mein.set_aptitude("animalhandling")
+        self.mein.set_aptitude("leadership")
+        self.mein.set_aptitude("overawe")
+        self.mein.set_aptitude("performin")
+        self.mein.set_aptitude("persuasion")
+        self.mein.set_aptitude("taletellin")
+        self.smarts = Trait()
+        self.smarts.set_aptitude("bluff")
+        self.smarts.set_aptitude("gambling")
+        self.smarts.set_aptitude("ridicule")
+        self.smarts.set_aptitude("scroungin")
+        self.smarts.set_aptitude("survival")
+        self.smarts.set_aptitude("streetwise")
+        self.smarts.set_aptitude("tinkerin")
+        self.spirit = Trait()
+        self.spirit.set_aptitude("faith")
+        self.spirit.set_aptitude("guts")
+        self.deftness = Trait()
+        self.deftness.set_aptitude("bow")
+        self.deftness.set_aptitude("filchin")
+        self.deftness.set_aptitude("lockpickin")
+        self.deftness.set_aptitude("sleightohand")
+        self.deftness.set_aptitude("speedload")
+        self.deftness.set_aptitude("throwin")
+        self.nimbleness = Trait()
+        self.nimbleness.set_aptitude("climbin", 1)
+        self.nimbleness.set_aptitude("dodge")
+        self.nimbleness.set_aptitude("drivin")
+        self.nimbleness.set_aptitude("fightin")
+        self.nimbleness.set_aptitude("ridin")
+        self.nimbleness.set_aptitude("sneak", 1)
+        self.nimbleness.set_aptitude("swimming")
+        self.nimbleness.set_aptitude("teamster")
+        self.strength = Trait()
+        self.quickness = Trait()
+        self.quickness.set_aptitude("speeddraw")
+        self.vigor = Trait()
 
         self.pace = 0
         self.size = 5
+        mysterious_past = False
         
-    #def generate:
+    def create_random(self):
         """create a random character based on card draw and random assignment"""
-    
+        #Draw cards and get aptitudes
+        deck = Deck()
+        hand = [deck.draw() for i in range(0,12)]
+        aptitudes = [self.__dict__[t] for t in self.__dict__ 
+                if type(self.__dict__[t]) is Trait]
+       
+        #Convert jokers to dice size and check for Mysterious Past
+        for c in hand:
+            if c.suit == "Joker":
+               self.mysterious_past = True
+               card = deck.draw()
+               c.suit = card.suit
+               
+        #Remove two lowest value cards
+        hand.remove(min(hand, key=lambda x: x.value))
+        hand.remove(min(hand, key=lambda x: x.value))
+
+        #Apply num and size randomly to aptitudes
+        for a in aptitudes:
+            c = hand.pop()
+            a.set_num(c.die_num)
+            a.set_size(c.die_size)
+            print(a.num, a.size)
+        
 if __name__ == "__main__":
-    c = Character()
-    print(c.knowledge.language.roll())
+    c = Character() 
+    c.create_random()
+    
