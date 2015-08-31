@@ -147,11 +147,12 @@ class Character:
         
     def create_random(self):
         """create a random character based on card draw and random assignment"""
+        #Get list of traits and aptitudes
+        traits, aptitudes = self.__get_stats()
+
         #Draw cards and get aptitudes
         deck = Deck()
         hand = [deck.draw() for i in range(0,12)]
-        traits = [self.__dict__[t] for t in self.__dict__ 
-                if type(self.__dict__[t]) is Trait]
        
         #Convert jokers to dice size and check for Mysterious Past
         for c in hand:
@@ -177,13 +178,6 @@ class Character:
         #Get aptitude points
         aptitude_points = self.knowledge.size + self.smarts.size + self.cognition.size
 
-        #Get list of all aptitudes 
-        aptitudes = []
-        for t in traits:
-            for a in t.__dict__:
-                if type(t.__dict__[a]) is Aptitude:
-                    aptitudes.append(t.__dict__[a])
-                    
         #Randomly assign points to aptitudes
         while (aptitude_points > 0):
             if aptitude_points > 5:
@@ -193,6 +187,22 @@ class Character:
             aptitudes[randint(0, len(aptitudes)-1)].set_num(num)
             aptitude_points -= num
 
+    def __get_stats(self):
+        """Returns characters stats to display to the user. Returns tuple of
+        traits and aptitudes"""
+        #Get list of all traits
+        traits = [self.__dict__[t] for t in self.__dict__ 
+                if type(self.__dict__[t]) is Trait]
+
+        #Get list of all aptitudes 
+        aptitudes = []
+        for t in traits:
+            for a in t.__dict__:
+                if type(t.__dict__[a]) is Aptitude:
+                    aptitudes.append(t.__dict__[a])
+        
+        return (traits, aptitudes)
+        
 if __name__ == "__main__":
     c = Character() 
     c.create_random()
