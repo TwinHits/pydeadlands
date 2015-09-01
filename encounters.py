@@ -93,9 +93,16 @@ class Round():
             next_turns.append(turn)
     
         if len(self.turns) == 0:
-            self.over = True
+            self._end()
 
         return next_turns
+
+    def _end(self):
+        self.over = True
+        for c in self.round_cards:
+            for t in self.round_cards[c]:
+                t.return_to_deck()
+
 
 class Turn():
     """A single turn in a round. Takes a character and a card. Surfaces the

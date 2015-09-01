@@ -6,14 +6,20 @@ class Deck:
             shuffle(): Resets the deck to 54 cards in random order.
     """
     def __init__(self):
+        self.in_play = []
         self.shuffle()
 
     def draw(self):
-        return self.cards.pop()
+        card = self.cards.pop()
+        self.in_play.append(card.value)
+        return card 
 
     def shuffle(self):
-        self.cards = [Card(i) for i in range(1, 55)]
+        self.cards = [Card(i, self) for i in range(1, 55) if i not in self.in_play]
         shuffle(self.cards)
+
+    def from_play(self, value):
+        self.in_play.remove(value)
 
 class Card:
     """A card is really just a number. Takes a relative value of a card and
@@ -27,8 +33,9 @@ class Card:
             character creation.
             card.name: Get the name of the card face.
             """
-    def __init__(self, value):
+    def __init__(self, value, deck):
         self.value = value
+        self.deck = deck
         lookup = card_lookup_table[self.value] 
         self.number = lookup[0]
         self.suit = lookup[1]
@@ -38,6 +45,9 @@ class Card:
             self.name = self.number + " " + self.suit
         else:
             self.name = self.number + " of " + self.suit
+
+    def return_to_deck(self):
+        self.deck.from_play(self.value)
 
 card_lookup_table = {
         #number, suit, die number, die size for initilization of a deck
