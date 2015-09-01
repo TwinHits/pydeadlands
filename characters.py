@@ -62,8 +62,8 @@ class Character:
         
         return (traits, aptitudes)
         
-    def __init__(self):
-        """Any deadlands character, player, npc, or monster. Generates
+    def __init__(self, name):
+        """Any deadlands character, player, npc, or monster. Takes a name. Generates
         traits and aptitudes instances on initialization.""" 
         self.cognition = Trait()
         self.cognition.set_aptitude("artillery")
@@ -125,4 +125,5 @@ class Character:
         self.pace = 0
         self.size = 5
         self.wind = 0
-        mysterious_past = False
+        self.mysterious_past = False
+        self.name = name
