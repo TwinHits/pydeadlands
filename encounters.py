@@ -1,15 +1,13 @@
 from cards import Deck
 
 class Encounter():
-    """An instance of this class is an encounter driven by quickness based
-    cards.
-        Takes two lists of characters, one for players, one for the marshal
-        so that each side has it's own deck.
-        Anything else that is a circumstance should be passed in as a keyword
-        argument.
-        Combat(characters list players, characters list marhsals)
-        Possible Keywords:
-            surprise=True 
+    """Combat(characters list players, characters list marhsals)
+    An instance of this class is an encounter driven by quickness based
+    cards drawn turns.
+    Takes two lists of characters, one for players, one for the marshal so that each side has it's own deck.
+    Anything else that is a circumstance should be passed in as a keyword argument.
+    Possible Keywords:
+        surprise=True 
     """
     def __init__(self, players, marshal, **kwargs):
         self.over = False
@@ -18,32 +16,30 @@ class Encounter():
         self.players_deck = Deck()
         self.marshal_deck = Deck()
 
+        #Possible keywords
         self.surprise = False
 
+        #Check for keyword circumstances
         for k in kwargs:
             if k == surprise:
                 self.surprise = surprise
         
     def begin(self):
-        """Calling this method begins the ecounter. When this method returns,
-        the encounter is over."""
-        while(self.over == False):
+        """Calling begin() begins the ecounter. When this method returns, the encounter is over."""
+        while(self.over != True):
             _round = Round(self)
-            while(_round.over == False):
+            while(_round.over != True):
                 turns = _round._next()
-                print([[t.character.name, t.value] for t in turns]) 
-                #The characters take action 
-            #check if encounter is over
+                #The characters take action here
+            #check if encounter is over and call end()
             self.end()
-            self.over = True
 
     def end(self):
-        #destructor actions
-        pass
+        """Calling end() ends the encounter, and performs all end of encounter actions"""
+        self.over = True
 
 class Round():
-    """A round is defined by each character drawing cards and taking
-    actions."""
+    """A round is defined by each character drawing cards and taking actions until no Turns remain."""
     def __init__(self, encounter):
         self.over = False
         self.encounter = encounter
@@ -64,11 +60,12 @@ class Round():
         self.turns.sort(reverse=True, key=lambda x: x.value)
 
     def __roll_quickness(self, characters, deck):
-        """Takes a list of characters and a deck and returns the cards for those
-        characters as a dictionary"""
+        """Takes a list of characters and a deck and adds those cards to that
+        character in a dictionary."""
         for c in characters:
             roll = c.quickness.roll() 
 
+            #Check for busts
             if roll == 0:
                 num_turns = 0
             else:
@@ -76,7 +73,12 @@ class Round():
 
             cards = [deck.draw() for i in range(0, num_turns)]
             
-            #check for black joker
+            #Check for black joker
+            for i in cards:
+                if i.name == "Black Joker":
+                    i.return_to_deck()
+                    #return c's sleeved card to the deck
+                    deck.shuffle()
 
             self.round_cards[c] = cards 
 
@@ -105,7 +107,7 @@ class Round():
 
 
 class Turn():
-    """A single turn in a round. Takes a character and a card. Surfaces the
+    """A struct for a single turn in a round. Takes a character and a card. Surfaces the
     card value for easier ordering"""
     def __init__(self, character, card):
         self.character = character
