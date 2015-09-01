@@ -10,6 +10,8 @@ class Deck:
         self.shuffle()
 
     def draw(self):
+        if len(self.cards) == 0:
+            self.shuffle()
         card = self.cards.pop()
         self.in_play.append(card.value)
         return card 
