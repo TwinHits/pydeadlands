@@ -127,3 +127,6 @@ class Character:
         self.wind = 0
         self.mysterious_past = False
         self.name = name
+
+
+        self.sleeved_card = None

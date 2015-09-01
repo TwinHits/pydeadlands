@@ -30,8 +30,8 @@ class Encounter():
             _round = Round(self)
             while(_round.over != True):
                 turns = _round._next()
-                #The characters take action here
-            #check if encounter is over and call end()
+                #TODO The characters take action here
+            #TODO Check if encounter is over and then call end()
             self.end()
 
     def end(self):
@@ -77,20 +77,20 @@ class Round():
             for i in cards:
                 if i.name == "Black Joker":
                     i.return_to_deck()
-                    #return c's sleeved card to the deck
+                    if c.sleved_card:
+                        c.sleeved_card.return_to_deck()
+                        c.sleeved_card = None
                     deck.shuffle()
 
             self.round_cards[c] = cards 
 
     def _next(self):
         """Calling this method gets the next character in line to start
-        combat."""
-        #return the next characters to go
-        #if there are no more characters to go
+        combat, returns two if they are simultanious."""
         next_turns = []
         turn = self.turns[0] 
 
-        while(len(self.turns) != 0 and self.turns[0].value == turn.value):
+        while (len(self.turns) != 0 and self.turns[0].value == turn.value):
             turn = self.turns.pop(0)
             next_turns.append(turn)
     
