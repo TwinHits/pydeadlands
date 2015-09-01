@@ -31,7 +31,7 @@ class Encounter():
             _round = Round(self)
             while(_round.over == False):
                 turns = _round._next()
-                print([t.character.name for t in turns]) 
+                print([[t.character.name, t.value] for t in turns]) 
                 #The characters take action 
             #check if encounter is over
             self.end()
@@ -61,7 +61,7 @@ class Round():
             for card in self.round_cards[char]:
                 self.turns.append(Turn(char, card))
 
-        self.turns.sort(key=lambda x: x.value)
+        self.turns.sort(reverse=True, key=lambda x: x.value)
 
     def __roll_quickness(self, characters, deck):
         """Takes a list of characters and a deck and returns the cards for those
