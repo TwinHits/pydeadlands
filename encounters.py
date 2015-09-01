@@ -30,8 +30,9 @@ class Encounter():
         while(self.over == False):
             _round = Round(self)
             while(_round.over == False):
+                turns = _round._next()
+                print([t.character.name for t in turns]) 
                 #The characters take action 
-                _round._next()
             #check if encounter is over
             self.end()
             self.over = True
@@ -60,11 +61,7 @@ class Round():
             for card in self.round_cards[char]:
                 self.turns.append(Turn(char, card))
 
-        self.turns.sort(reverse=True, key=lambda x: x.value)
-
-        #Test in cout
-        for t in self.turns:
-            print(t.value, t.character.name)
+        self.turns.sort(key=lambda x: x.value)
 
     def __roll_quickness(self, characters, deck):
         """Takes a list of characters and a deck and returns the cards for those
@@ -73,11 +70,11 @@ class Round():
             roll = c.quickness.roll() 
 
             if roll == 0:
-                turns = 0
+                num_turns = 0
             else:
-                turns = int(roll/5 + 1)
+                num_turns = int(roll/5 + 1)
 
-            cards = [deck.draw() for i in range(0, turns)]
+            cards = [deck.draw() for i in range(0, num_turns)]
             
             #check for black joker
 
@@ -86,9 +83,19 @@ class Round():
     def _next(self):
         """Calling this method gets the next character in line to start
         combat."""
-        #return the next character to go
+        #return the next characters to go
         #if there are no more characters to go
-        self.over = True
+        next_turns = []
+        turn = self.turns[0] 
+
+        while(len(self.turns) != 0 and self.turns[0].value == turn.value):
+            turn = self.turns.pop(0)
+            next_turns.append(turn)
+    
+        if len(self.turns) == 0:
+            self.over = True
+
+        return next_turns
 
 class Turn():
     """A single turn in a round. Takes a character and a card. Surfaces the
