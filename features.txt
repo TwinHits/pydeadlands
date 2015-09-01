@@ -1,1 +1,27 @@
-:
+The PLAN:
+	1) Build random character generator
+	2) 
+
+	Edges
+	Hinderances	
+
+Ideas:
+	1) User driven character creator
+	2) Edges and hinderances could be sorted by what they affect, so adding
+	edges and hinderences only requires coding in the edges/hinderances files
+	Then each action checks for edges and hindereances that might affect it
+
+
+	In order to know where to go next, I need to know what the final product
+will look like.
+
+	A deadlands library and engine that players can use in their own games.
+	
+	Combat engine: 
+	instance of engine
+	combat as a class
+		turn order
+		active character
+	
+
+	Combat requires that characters have location
