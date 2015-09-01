@@ -4,6 +4,64 @@ from cards import Deck
 from stats import Aptitude, Trait, Concentration
 
 class Character:
+    def create_random(self):
+        """create a random character based on card draw and random assignment"""
+        #Get list of traits and aptitudes
+        traits, aptitudes = self.__get_stats()
+
+        #Draw cards and get aptitudes
+        deck = Deck()
+        hand = [deck.draw() for i in range(0,12)]
+       
+        #Convert jokers to dice size and check for Mysterious Past
+        for c in hand:
+            if c.suit == "Joker":
+               self.mysterious_past = True
+               card = deck.draw()
+               c.suit = card.suit
+               
+        #Remove two lowest value cards
+        hand.remove(min(hand, key=lambda x: x.value))
+        hand.remove(min(hand, key=lambda x: x.value))
+
+        #Apply num and size randomly to aptitudes
+        for t in traits:
+            c = hand.pop()
+            t.set_num(c.die_num)
+            t.set_size(c.die_size)
+
+        #Math out secondary attributes
+        self.pace = self.quickness.size
+        self.wind = self.vigor.size + self.spirit.size
+
+        #Get aptitude points
+        aptitude_points = self.knowledge.size + self.smarts.size + self.cognition.size
+
+        #Randomly assign points to aptitudes
+        while (aptitude_points > 0):
+            if aptitude_points > 5:
+                num = int((randint(0,5) + randint(0,5)) / 2)
+            else:
+                num = aptitude_points
+            aptitudes[randint(0, len(aptitudes)-1)].set_num(num)
+            aptitude_points -= num
+
+    def __get_stats(self):
+        """Returns characters stats to display to the user. Returns tuple of
+        traits and aptitudes"""
+        #Get list of all traits
+        traits = [self.__dict__[t] for t in self.__dict__ 
+                if type(self.__dict__[t]) is Trait]
+
+        #Get list of all aptitudes 
+        aptitudes = []
+        for t in traits:
+            for a in t.__dict__:
+                if type(t.__dict__[a]) is Aptitude:
+                    aptitudes.append(t.__dict__[a])
+        
+        return (traits, aptitudes)
+        
     def __init__(self):
         """Any deadlands character, player, npc, or monster. Generates
         traits and aptitudes instances on initialization.""" 
@@ -68,65 +126,3 @@ class Character:
         self.size = 5
         self.wind = 0
         mysterious_past = False
-        
-    def create_random(self):
-        """create a random character based on card draw and random assignment"""
-        #Get list of traits and aptitudes
-        traits, aptitudes = self.__get_stats()
-
-        #Draw cards and get aptitudes
-        deck = Deck()
-        hand = [deck.draw() for i in range(0,12)]
-       
-        #Convert jokers to dice size and check for Mysterious Past
-        for c in hand:
-            if c.suit == "Joker":
-               self.mysterious_past = True
-               card = deck.draw()
-               c.suit = card.suit
-               
-        #Remove two lowest value cards
-        hand.remove(min(hand, key=lambda x: x.value))
-        hand.remove(min(hand, key=lambda x: x.value))
-
-        #Apply num and size randomly to aptitudes
-        for t in traits:
-            c = hand.pop()
-            t.set_num(c.die_num)
-            t.set_size(c.die_size)
-
-        #Math out secondary attributes
-        self.pace = self.quickness.size
-        self.wind = self.vigor.size + self.spirit.size
-
-        #Get aptitude points
-        aptitude_points = self.knowledge.size + self.smarts.size + self.cognition.size
-
-        #Randomly assign points to aptitudes
-        while (aptitude_points > 0):
-            if aptitude_points > 5:
-                num = int((randint(0,5) + randint(0,5)) / 2)
-            else:
-                num = aptitude_points
-            aptitudes[randint(0, len(aptitudes)-1)].set_num(num)
-            aptitude_points -= num
-
-    def __get_stats(self):
-        """Returns characters stats to display to the user. Returns tuple of
-        traits and aptitudes"""
-        #Get list of all traits
-        traits = [self.__dict__[t] for t in self.__dict__ 
-                if type(self.__dict__[t]) is Trait]
-
-        #Get list of all aptitudes 
-        aptitudes = []
-        for t in traits:
-            for a in t.__dict__:
-                if type(t.__dict__[a]) is Aptitude:
-                    aptitudes.append(t.__dict__[a])
-        
-        return (traits, aptitudes)
-        
-if __name__ == "__main__":
-    c = Character() 
-    c.create_random()
